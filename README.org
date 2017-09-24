@@ -4,6 +4,10 @@ This is a Java application that will traverse a maven repository directory hiera
 
 The program is intended to clean up snapshot repositories created with "mvn deploy" either using "file:" or "ftp:" URLs, and is intended to be run as a cronjob.
 
+** Status
+
+[[https://travis-ci.org/steinarb/maven-repository-snapshot-pruner][file:https://travis-ci.org/steinarb/maven-repository-snapshot-pruner.svg?branch=master]] [[https://coveralls.io/r/steinarb/maven-repository-snapshot-pruner][file:https://coveralls.io/repos/steinarb/maven-repository-snapshot-pruner/badge.svg]]
+
 ** Installation on a debian system
 
  1. Install the prerequisites
