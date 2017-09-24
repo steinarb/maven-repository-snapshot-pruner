@@ -9,7 +9,7 @@ import org.jdom2.JDOMException;
 public class MavenRepositorySnapshotPruner {
 
     public static void main(String[] args) throws IOException, JDOMException {
-        Path currentDirectory = Paths.get("").toAbsolutePath();
+        Path currentDirectory = Paths.get(System.getProperty("user.dir"));
         MavenRepository repository = new MavenRepository(currentDirectory);
         System.out.println("Starting snapshot pruning in maven repository under \"" + currentDirectory + "\"");
         int numberOfDeletedFiles = repository.pruneSnapshots();
