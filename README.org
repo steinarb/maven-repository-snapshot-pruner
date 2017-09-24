@@ -21,9 +21,10 @@ The program is intended to clean up snapshot repositories created with "mvn depl
       cd maven-repository-snapshot-pruner
       mvn clean install
     #+END_EXAMPLE
- 3. Copy the pruner to the home directory user owning the maven repository
+ 3. Copy the repository pruner to the home directory user owning the maven repository (user "maven" in the example below):
     #+BEGIN_EXAMPLE
-      cp maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar ~maven
+      cp /tmp/maven-repository-snapshot-pruner/target/maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar ~maven
+      chown maven.maven ~maven/maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar
     #+END_EXAMPLE
  4. Run the pruner once a day as that user (in the example the user with the username "maven" is used:
     1. Run this command as root
@@ -32,7 +33,7 @@ The program is intended to clean up snapshot repositories created with "mvn depl
        #+END_EXAMPLE
     2. In the editor that is opened add the following line (the ">/dev/null" is to avoid nightly emails, remove it if more debugging is needed):
        #+BEGIN_EXAMPLE
-         0 0 * * * cd /var/www-maven/repository; jar -jar $HOME/maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar >/dev/null
+         55 23 * * * cd /var/www-maven/repository; java -jar $HOME/maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar >/dev/null
        #+END_EXAMPLE
 
 * License
