@@ -66,7 +66,7 @@ public class MavenMetadata {
 
     public int deleteFilesNotPartOfSnapshot() {
         int numberOfDeletedFiles = 0;
-        Set<File> filesToDelete = new HashSet<File>(getFilesInDirectory());
+        Set<File> filesToDelete = new HashSet<>(getFilesInDirectory());
         filesToDelete.removeAll(getCurrentSnapshotFilesInDirectory());
         for (File file : filesToDelete) {
             file.delete();

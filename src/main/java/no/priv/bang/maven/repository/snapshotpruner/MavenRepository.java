@@ -54,7 +54,7 @@ public class MavenRepository {
     }
 
     List<MavenMetadata> findMavenMetadataFilesWithSnapshotVersion() throws IOException, JDOMException {
-        List<MavenMetadata> parsedMetadataFiles = new ArrayList<MavenMetadata>();
+        List<MavenMetadata> parsedMetadataFiles = new ArrayList<>();
         for (Path mavenMetadataFile : findMavenMetadataFiles()) {
             MavenMetadata metadata = parseMavenMetdata(mavenMetadataFile);
             if (metadata.hasSnapshotVersion()) {
@@ -91,7 +91,7 @@ public class MavenRepository {
         public FileCollector(String filenameToMatch) {
             super();
             this.filenameToMatch = filenameToMatch;
-            matchedFilenames = new ArrayList<Path>();
+            matchedFilenames = new ArrayList<>();
         }
 
         public List<Path> getMatchedFilenames() {
