@@ -76,7 +76,7 @@ public class MavenRepository {
         SAXBuilder builder = new SAXBuilder();
         Document document = builder.build(mavenMetadataFile.toFile());
         List<Element> versionElements = snapshotVersionXPathExpression.evaluate(document);
-        if (versionElements.size() > 0) {
+        if (!versionElements.isEmpty()) {
             String snapshotVersion = versionElements.get(0).getText();
             mavenMetadata.setSnapshotVersion(snapshotVersion);
         }
