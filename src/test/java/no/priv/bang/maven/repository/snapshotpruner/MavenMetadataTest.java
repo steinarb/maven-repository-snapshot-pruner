@@ -18,9 +18,13 @@ package no.priv.bang.maven.repository.snapshotpruner;
 import static org.junit.Assert.*;
 import static no.priv.bang.maven.repository.snapshotpruner.MavenProperties.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jdom2.JDOMException;
 import org.junit.Test;
@@ -45,4 +49,34 @@ public class MavenMetadataTest {
         assertEquals(16, mavenMetadataWithSnapshotVersion.getFilesInDirectory().size());
     }
 
+
+    /**
+     * Corner case test: Verifies that trying to delete non-existing file
+     * will not cause any problems and the failed file will not be counted
+     * as deleted.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testDeleteSnapshotFilesWhenErrorOccurs() throws Exception {
+        copyMockMavenSnapshotRepository();
+        Path repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
+        MavenRepository repository = new MavenRepository(repositoryDirectory);
+
+        Path mavenMetadataFileWithSnapshotVersion = Paths.get(repositoryDirectory.toString(), "no/priv/bang/ukelonn/ukelonn.api/1.0.0-SNAPSHOT/maven-metadata.xml");
+        MavenMetadata mavenMetadataWithSnapshotVersion = repository.parseMavenMetdata(mavenMetadataFileWithSnapshotVersion);
+        int originalNumberOfFiles = mavenMetadataWithSnapshotVersion.getFilesInDirectory().size();
+        int numberOfFilesThatShouldNotBeDeleted = mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory().size();
+        Set<File> filesToDelete = new HashSet<>(mavenMetadataWithSnapshotVersion.getFilesInDirectory());
+        filesToDelete.removeAll(mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory());
+        deleteAFileInAdvanceOfTheTest(filesToDelete);
+        int numberOfDeletedFiles = mavenMetadataWithSnapshotVersion.doDeleteFilesNotPartOfSnapshot(filesToDelete, Collections.emptyList());
+        assertEquals(originalNumberOfFiles - numberOfFilesThatShouldNotBeDeleted - 1, numberOfDeletedFiles);
+    }
+
+
+    void deleteAFileInAdvanceOfTheTest(Set<File> filesToDelete) {
+        File fileToDeleteInAdvance = filesToDelete.iterator().next();
+        fileToDeleteInAdvance.delete();
+    }
 }

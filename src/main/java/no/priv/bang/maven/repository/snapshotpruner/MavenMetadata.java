@@ -17,8 +17,11 @@ package no.priv.bang.maven.repository.snapshotpruner;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,12 +68,21 @@ public class MavenMetadata {
     }
 
     public int deleteFilesNotPartOfSnapshot() {
-        int numberOfDeletedFiles = 0;
         Set<File> filesToDelete = new HashSet<>(getFilesInDirectory());
-        filesToDelete.removeAll(getCurrentSnapshotFilesInDirectory());
+        Collection<File> currentSnapshotFilesInDirectory = getCurrentSnapshotFilesInDirectory();
+        return doDeleteFilesNotPartOfSnapshot(filesToDelete, currentSnapshotFilesInDirectory);
+    }
+
+    int doDeleteFilesNotPartOfSnapshot(Set<File> filesToDelete, Collection<File> currentSnapshotFilesInDirectory) {
+        int numberOfDeletedFiles = 0;
+        filesToDelete.removeAll(currentSnapshotFilesInDirectory);
         for (File file : filesToDelete) {
-            file.delete();
-            numberOfDeletedFiles++;
+            try {
+                Files.delete(file.toPath());
+                numberOfDeletedFiles++;
+            } catch (IOException e) {
+                // If deletion fails, just skip the file and continue (but the deleted file isn't counted)
+            }
         }
 
         return numberOfDeletedFiles;
