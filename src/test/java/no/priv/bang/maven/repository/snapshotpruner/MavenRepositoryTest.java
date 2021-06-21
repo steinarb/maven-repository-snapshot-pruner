@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Steinar Bang
+ * Copyright 2017-2021 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package no.priv.bang.maven.repository.snapshotpruner;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static no.priv.bang.maven.repository.snapshotpruner.MavenProperties.*;
 
 import java.io.IOException;
@@ -23,12 +23,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import org.jdom2.JDOMException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MavenRepositoryTest {
+class MavenRepositoryTest {
 
     @Test
-    public void testFindMavenMetadataFiles() throws IOException {
+    void testFindMavenMetadataFiles() throws IOException {
         Path repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
         MavenRepository repository = new MavenRepository(repositoryDirectory);
         List<Path> metadataFiles = repository.findMavenMetadataFiles();
@@ -36,7 +36,7 @@ public class MavenRepositoryTest {
     }
 
     @Test
-    public void testParseMavenMetadataFile() throws IOException, JDOMException {
+    void testParseMavenMetadataFile() throws IOException, JDOMException {
         Path repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
         MavenRepository repository = new MavenRepository(repositoryDirectory);
 
@@ -52,7 +52,7 @@ public class MavenRepositoryTest {
     }
 
     @Test
-    public void testFindMavenMetadataFilesWithSnapshotVersion() throws IOException, JDOMException {
+    void testFindMavenMetadataFilesWithSnapshotVersion() throws IOException, JDOMException {
         Path repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
         MavenRepository repository = new MavenRepository(repositoryDirectory);
         List<MavenMetadata> metadataFiles = repository.findMavenMetadataFilesWithSnapshotVersion();
@@ -60,7 +60,7 @@ public class MavenRepositoryTest {
     }
 
     @Test
-    public void testPruneSnapshotsInRepository() throws IOException, JDOMException {
+    void testPruneSnapshotsInRepository() throws IOException, JDOMException {
         copyMockMavenSnapshotRepository();
         Path repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
         MavenRepository repository = new MavenRepository(repositoryDirectory);

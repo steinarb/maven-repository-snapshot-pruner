@@ -1,7 +1,7 @@
 package no.priv.bang.maven.repository.snapshotpruner;
 
-import static org.junit.Assert.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,12 +9,12 @@ import java.nio.file.Paths;
 import static no.priv.bang.maven.repository.snapshotpruner.MavenProperties.*;
 
 import org.jdom2.JDOMException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MavenRepositorySnapshotPrunerTest {
+class MavenRepositorySnapshotPrunerTest {
 
     @Test
-    public void testRunSnapshotPrunerApplication() throws IOException, JDOMException {
+    void testRunSnapshotPrunerApplication() throws IOException, JDOMException {
         copyMockMavenSnapshotRepository();
         Path currentDirectory = setCurrentDirectoryToMockRepositoryTop();
 
