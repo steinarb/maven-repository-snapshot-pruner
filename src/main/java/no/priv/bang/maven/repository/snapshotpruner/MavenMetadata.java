@@ -56,12 +56,8 @@ public class MavenMetadata {
     }
 
     public List<File> getCurrentSnapshotFilesInDirectory() {
-        FilenameFilter snapshotFilter = new FilenameFilter() {
-
-                public boolean accept(File dir, String name) {
-                    return name.contains(snapshotVersion) || name.equals("maven-metadata.xml");
-                }
-            };
+        FilenameFilter snapshotFilter =
+            (File dir, String name) -> name.contains(snapshotVersion) || name.equals("maven-metadata.xml");
         File directory = path.getParent().toFile();
         File[] snapshotFiles = directory.listFiles(snapshotFilter);
         return Arrays.asList(snapshotFiles);
