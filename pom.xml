@@ -139,12 +139,26 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <configuration>
-                    <coberturaReports>
-                        <coberturaReport>${basedir}/target/coverage.xml</coberturaReport>
-                    </coberturaReports>
+                    <jacocoReports>
+                        <jacocoReport>${basedir}/target/site/jacoco/jacoco.xml</jacocoReport>
+                    </jacocoReports>
                 </configuration>
             </plugin>
         </plugins>
