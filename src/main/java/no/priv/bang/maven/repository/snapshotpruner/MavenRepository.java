@@ -74,7 +74,10 @@ public class MavenRepository {
     MavenMetadata parseMavenMetdata(Path mavenMetadataFile) throws JDOMException, IOException {
         MavenMetadata mavenMetadata = new MavenMetadata(mavenMetadataFile);
         SAXBuilder builder = new SAXBuilder();
-        Document document = builder.build(mavenMetadataFile.toFile());
+        builder.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+        builder.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        builder.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        builder.setExpandEntities(false);        Document document = builder.build(mavenMetadataFile.toFile());
         List<Element> versionElements = snapshotVersionXPathExpression.evaluate(document);
         if (!versionElements.isEmpty()) {
             String snapshotVersion = versionElements.get(0).getText();
