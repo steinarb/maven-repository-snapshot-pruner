@@ -26,30 +26,27 @@ The program is intended to clean up snapshot repositories created with "mvn depl
 
  1. Install the prerequisites
     #+BEGIN_EXAMPLE
-      apt-get install git maven openjdk-8-jdk
+      apt-get install git maven default-jdk
     #+END_EXAMPLE
  2. Clone and build the repository snapshot pruner
     #+BEGIN_EXAMPLE
-      cd /tmp
+      cd /var/www-maven/
+      mkdir -p .m2
+      chown -R maven.maven .m2
       git clone https://github.com/steinarb/maven-repository-snapshot-pruner
+      chown -R maven.maven maven-repository-snapshot-pruner
       cd maven-repository-snapshot-pruner
-      mvn clean install
+      sudo -u maven git config pull.ff only
     #+END_EXAMPLE
- 3. Copy the repository pruner to the home directory user owning the maven repository (user "maven" in the example below):
-    #+BEGIN_EXAMPLE
-      cp /tmp/maven-repository-snapshot-pruner/target/maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar ~maven
-      chown maven.maven ~maven/maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar
-    #+END_EXAMPLE
- 4. Run the pruner once a day as that user (in the example the user with the username "maven" is used:
+ 3. Run the pruner once a day as that user (in the example the user with the username "maven" is used:
     1. Run this command as root
        #+BEGIN_EXAMPLE
          sudo -u maven crontab -e
        #+END_EXAMPLE
     2. In the editor that is opened add the following line (the ">/dev/null" is to avoid nightly emails, remove it if more debugging is needed):
        #+BEGIN_EXAMPLE
-         55 23 * * * cd /var/www-maven/repository; java -jar $HOME/maven-repository-snapshot-pruner-0.0.1-SNAPSHOT-jar-with-dependencies.jar >/dev/null
+         55 23 * * * cd /var/www-maven/maven-repository-snapshot-pruner; git pull >/dev/null; mvn compile exec:java -Duser.dir=/var/www-maven/repository >/dev/null
        #+END_EXAMPLE
-
 * License
 
 The license is Apache Public License v 2.0.
