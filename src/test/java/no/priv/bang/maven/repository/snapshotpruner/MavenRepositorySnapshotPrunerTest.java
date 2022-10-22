@@ -28,7 +28,7 @@ class MavenRepositorySnapshotPrunerTest {
 
         // Verify that the old snapshot files have actually been deleted
         int totalNumberOfFilesAfterDelete = repository.findMavenMetadataFilesWithSnapshotVersion().stream().mapToInt(p -> p.getFilesInDirectory().size()).sum();
-        assertEquals(20, totalNumberOfFilesAfterDelete);
+        assertEquals(24, totalNumberOfFilesAfterDelete);
     }
 
     private Path setCurrentDirectoryToMockRepositoryTop() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Steinar Bang
+ * Copyright 2017-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class MavenMetadata {
 
     public List<File> getCurrentSnapshotFilesInDirectory() {
         FilenameFilter snapshotFilter =
-            (File dir, String name) -> name.contains(snapshotVersion) || name.equals("maven-metadata.xml");
+            (File dir, String name) -> name.contains(snapshotVersion) || name.contains("maven-metadata.xml");
         File directory = path.getParent().toFile();
         File[] snapshotFiles = directory.listFiles(snapshotFilter);
         return Arrays.asList(snapshotFiles);

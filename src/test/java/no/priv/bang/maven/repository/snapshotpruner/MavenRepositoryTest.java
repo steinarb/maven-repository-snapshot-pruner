@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Steinar Bang
+ * Copyright 2017-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ class MavenRepositoryTest {
         MavenRepository repository = new MavenRepository(repositoryDirectory);
 
         int totalNumberOfDeletedFiles = repository.pruneSnapshots();
-        assertEquals(400, totalNumberOfDeletedFiles);
+        assertEquals(396, totalNumberOfDeletedFiles);
     }
 
 }

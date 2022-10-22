@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Steinar Bang
+ * Copyright 2017-2022 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package no.priv.bang.maven.repository.snapshotpruner;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static no.priv.bang.maven.repository.snapshotpruner.MavenProperties.*;
 
 import java.io.File;
@@ -24,8 +25,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.assertj.core.api.Condition;
 import org.jdom2.JDOMException;
 import org.junit.jupiter.api.Test;
 
@@ -39,14 +43,16 @@ class MavenMetadataTest {
 
         Path mavenMetadataFileWithSnapshotVersion = Paths.get(repositoryDirectory.toString(), "no/priv/bang/ukelonn/ukelonn.api/1.0.0-SNAPSHOT/maven-metadata.xml");
         MavenMetadata mavenMetadataWithSnapshotVersion = repository.parseMavenMetdata(mavenMetadataFileWithSnapshotVersion);
+        assertHasSha1AndMd5Checksums(findMavenMetadataFiles(mavenMetadataWithSnapshotVersion.getFilesInDirectory()));
         assertTrue(mavenMetadataWithSnapshotVersion.hasSnapshotVersion());
         assertEquals("1.0.0-20170922.181212-25", mavenMetadataWithSnapshotVersion.getSnapshotVersion());
         assertEquals(mavenMetadataFileWithSnapshotVersion, mavenMetadataWithSnapshotVersion.getPath());
         assertEquals(378, mavenMetadataWithSnapshotVersion.getFilesInDirectory().size());
-        assertEquals(16, mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory().size());
+        assertEquals(18, mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory().size());
         int numberOfDeletedFiles = mavenMetadataWithSnapshotVersion.deleteFilesNotPartOfSnapshot();
-        assertEquals(362, numberOfDeletedFiles);
-        assertEquals(16, mavenMetadataWithSnapshotVersion.getFilesInDirectory().size());
+        assertEquals(360, numberOfDeletedFiles);
+        assertEquals(18, mavenMetadataWithSnapshotVersion.getFilesInDirectory().size());
+        assertHasSha1AndMd5Checksums(findMavenMetadataFiles(mavenMetadataWithSnapshotVersion.getFilesInDirectory()));
     }
 
 
@@ -78,5 +84,20 @@ class MavenMetadataTest {
     void deleteAFileInAdvanceOfTheTest(Set<File> filesToDelete) {
         File fileToDeleteInAdvance = filesToDelete.iterator().next();
         fileToDeleteInAdvance.delete();
+    }
+
+
+    private List<String> findMavenMetadataFiles(List<File> filesInDirectory) {
+        return filesInDirectory
+            .stream()
+            .map(f -> f.getAbsolutePath())
+            .filter(n -> n.contains("maven-metadata"))
+            .collect(Collectors.toList());
+    }
+
+    private void assertHasSha1AndMd5Checksums(List<String> mavenMetadataFiles) {
+        var sha1Checksum = new Condition<String>(filename -> filename.endsWith("sha1"), "sha1 checksum file");
+        var md5Checksum = new Condition<String>(filename -> filename.endsWith("md5"), "md5 checksum file");
+        assertThat(mavenMetadataFiles).as("sha1 and/or md5 file missing").haveAtLeastOne(sha1Checksum).haveAtLeastOne(md5Checksum);
     }
 }
