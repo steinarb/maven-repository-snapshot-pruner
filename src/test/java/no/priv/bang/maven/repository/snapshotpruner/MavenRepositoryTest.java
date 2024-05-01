@@ -15,6 +15,7 @@
  */
 package no.priv.bang.maven.repository.snapshotpruner;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static no.priv.bang.maven.repository.snapshotpruner.MavenProperties.*;
 
@@ -31,7 +32,7 @@ class MavenRepositoryTest {
         var repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
         var repository = new MavenRepository(repositoryDirectory);
         var metadataFiles = repository.findMavenMetadataFiles();
-        assertEquals(4, metadataFiles.size());
+        assertThat(metadataFiles).hasSize(4);
     }
 
     @Test
@@ -55,7 +56,7 @@ class MavenRepositoryTest {
         var repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
         var repository = new MavenRepository(repositoryDirectory);
         List<MavenMetadata> metadataFiles = repository.findMavenMetadataFilesWithSnapshotVersion();
-        assertEquals(2, metadataFiles.size());
+        assertThat(metadataFiles).hasSize(2);
     }
 
     @Test
