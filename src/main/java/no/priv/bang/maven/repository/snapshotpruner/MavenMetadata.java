@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Steinar Bang
+ * Copyright 2017-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,21 +58,21 @@ public class MavenMetadata {
     public List<File> getCurrentSnapshotFilesInDirectory() {
         FilenameFilter snapshotFilter =
             (File dir, String name) -> name.contains(snapshotVersion) || name.contains("maven-metadata.xml");
-        File directory = path.getParent().toFile();
-        File[] snapshotFiles = directory.listFiles(snapshotFilter);
+        var directory = path.getParent().toFile();
+        var snapshotFiles = directory.listFiles(snapshotFilter);
         return Arrays.asList(snapshotFiles);
     }
 
     public int deleteFilesNotPartOfSnapshot() {
-        Set<File> filesToDelete = new HashSet<>(getFilesInDirectory());
-        Collection<File> currentSnapshotFilesInDirectory = getCurrentSnapshotFilesInDirectory();
+        var filesToDelete = new HashSet<File>(getFilesInDirectory());
+        var currentSnapshotFilesInDirectory = getCurrentSnapshotFilesInDirectory();
         return doDeleteFilesNotPartOfSnapshot(filesToDelete, currentSnapshotFilesInDirectory);
     }
 
     int doDeleteFilesNotPartOfSnapshot(Set<File> filesToDelete, Collection<File> currentSnapshotFilesInDirectory) {
         int numberOfDeletedFiles = 0;
         filesToDelete.removeAll(currentSnapshotFilesInDirectory);
-        for (File file : filesToDelete) {
+        for (var file : filesToDelete) {
             try {
                 Files.delete(file.toPath());
                 numberOfDeletedFiles++;

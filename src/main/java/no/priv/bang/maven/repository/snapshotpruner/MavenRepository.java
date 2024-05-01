@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Steinar Bang
+ * Copyright 2017-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.filter.Filters;
@@ -45,8 +44,8 @@ public class MavenRepository {
     }
 
     public int pruneSnapshots() throws IOException, JDOMException {
-        int numberOfDeletedFiles = 0;
-        for (MavenMetadata metadata : findMavenMetadataFilesWithSnapshotVersion()) {
+        var numberOfDeletedFiles = 0;
+        for (var metadata : findMavenMetadataFilesWithSnapshotVersion()) {
             numberOfDeletedFiles += metadata.deleteFilesNotPartOfSnapshot();
         }
 
@@ -54,9 +53,9 @@ public class MavenRepository {
     }
 
     List<MavenMetadata> findMavenMetadataFilesWithSnapshotVersion() throws IOException, JDOMException {
-        List<MavenMetadata> parsedMetadataFiles = new ArrayList<>();
-        for (Path mavenMetadataFile : findMavenMetadataFiles()) {
-            MavenMetadata metadata = parseMavenMetdata(mavenMetadataFile);
+        var parsedMetadataFiles = new ArrayList<MavenMetadata>();
+        for (var mavenMetadataFile : findMavenMetadataFiles()) {
+            var metadata = parseMavenMetdata(mavenMetadataFile);
             if (metadata.hasSnapshotVersion()) {
                 parsedMetadataFiles.add(metadata);
             }
@@ -66,21 +65,22 @@ public class MavenRepository {
     }
 
     List<Path> findMavenMetadataFiles() throws IOException {
-        FileCollector mavenMetadataCollector = new FileCollector("maven-metadata.xml");
+        var mavenMetadataCollector = new FileCollector("maven-metadata.xml");
         Files.walkFileTree(repositoryDirectory, mavenMetadataCollector);
         return mavenMetadataCollector.getMatchedFilenames();
     }
 
     MavenMetadata parseMavenMetdata(Path mavenMetadataFile) throws JDOMException, IOException {
-        MavenMetadata mavenMetadata = new MavenMetadata(mavenMetadataFile);
-        SAXBuilder builder = new SAXBuilder();
+        var mavenMetadata = new MavenMetadata(mavenMetadataFile);
+        var builder = new SAXBuilder();
         builder.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
         builder.setFeature("http://xml.org/sax/features/external-general-entities", false);
         builder.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-        builder.setExpandEntities(false);        Document document = builder.build(mavenMetadataFile.toFile());
-        List<Element> versionElements = snapshotVersionXPathExpression.evaluate(document);
+        builder.setExpandEntities(false);
+        var document = builder.build(mavenMetadataFile.toFile());
+        var versionElements = snapshotVersionXPathExpression.evaluate(document);
         if (!versionElements.isEmpty()) {
-            String snapshotVersion = versionElements.get(0).getText();
+            var snapshotVersion = versionElements.get(0).getText();
             mavenMetadata.setSnapshotVersion(snapshotVersion);
         }
 
