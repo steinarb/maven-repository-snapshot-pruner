@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Steinar Bang
+ * Copyright 2017-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import static no.priv.bang.maven.repository.snapshotpruner.MavenProperties.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,18 +37,18 @@ class MavenMetadataTest {
     @Test
     void testDeleteSnapshotFiles() throws JDOMException, IOException {
         copyMockMavenSnapshotRepository();
-        Path repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
-        MavenRepository repository = new MavenRepository(repositoryDirectory);
+        var repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
+        var repository = new MavenRepository(repositoryDirectory);
 
-        Path mavenMetadataFileWithSnapshotVersion = Paths.get(repositoryDirectory.toString(), "no/priv/bang/ukelonn/ukelonn.api/1.0.0-SNAPSHOT/maven-metadata.xml");
-        MavenMetadata mavenMetadataWithSnapshotVersion = repository.parseMavenMetdata(mavenMetadataFileWithSnapshotVersion);
+        var mavenMetadataFileWithSnapshotVersion = Paths.get(repositoryDirectory.toString(), "no/priv/bang/ukelonn/ukelonn.api/1.0.0-SNAPSHOT/maven-metadata.xml");
+        var mavenMetadataWithSnapshotVersion = repository.parseMavenMetdata(mavenMetadataFileWithSnapshotVersion);
         assertHasSha1AndMd5Checksums(findMavenMetadataFiles(mavenMetadataWithSnapshotVersion.getFilesInDirectory()));
         assertTrue(mavenMetadataWithSnapshotVersion.hasSnapshotVersion());
         assertEquals("1.0.0-20170922.181212-25", mavenMetadataWithSnapshotVersion.getSnapshotVersion());
         assertEquals(mavenMetadataFileWithSnapshotVersion, mavenMetadataWithSnapshotVersion.getPath());
         assertEquals(378, mavenMetadataWithSnapshotVersion.getFilesInDirectory().size());
         assertEquals(18, mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory().size());
-        int numberOfDeletedFiles = mavenMetadataWithSnapshotVersion.deleteFilesNotPartOfSnapshot();
+        var numberOfDeletedFiles = mavenMetadataWithSnapshotVersion.deleteFilesNotPartOfSnapshot();
         assertEquals(360, numberOfDeletedFiles);
         assertEquals(18, mavenMetadataWithSnapshotVersion.getFilesInDirectory().size());
         assertHasSha1AndMd5Checksums(findMavenMetadataFiles(mavenMetadataWithSnapshotVersion.getFilesInDirectory()));
@@ -66,23 +65,23 @@ class MavenMetadataTest {
     @Test
     void testDeleteSnapshotFilesWhenErrorOccurs() throws Exception {
         copyMockMavenSnapshotRepository();
-        Path repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
-        MavenRepository repository = new MavenRepository(repositoryDirectory);
+        var repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
+        var repository = new MavenRepository(repositoryDirectory);
 
-        Path mavenMetadataFileWithSnapshotVersion = Paths.get(repositoryDirectory.toString(), "no/priv/bang/ukelonn/ukelonn.api/1.0.0-SNAPSHOT/maven-metadata.xml");
-        MavenMetadata mavenMetadataWithSnapshotVersion = repository.parseMavenMetdata(mavenMetadataFileWithSnapshotVersion);
-        int originalNumberOfFiles = mavenMetadataWithSnapshotVersion.getFilesInDirectory().size();
-        int numberOfFilesThatShouldNotBeDeleted = mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory().size();
-        Set<File> filesToDelete = new HashSet<>(mavenMetadataWithSnapshotVersion.getFilesInDirectory());
+        var mavenMetadataFileWithSnapshotVersion = Paths.get(repositoryDirectory.toString(), "no/priv/bang/ukelonn/ukelonn.api/1.0.0-SNAPSHOT/maven-metadata.xml");
+        var mavenMetadataWithSnapshotVersion = repository.parseMavenMetdata(mavenMetadataFileWithSnapshotVersion);
+        var originalNumberOfFiles = mavenMetadataWithSnapshotVersion.getFilesInDirectory().size();
+        var numberOfFilesThatShouldNotBeDeleted = mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory().size();
+        var filesToDelete = new HashSet<File>(mavenMetadataWithSnapshotVersion.getFilesInDirectory());
         filesToDelete.removeAll(mavenMetadataWithSnapshotVersion.getCurrentSnapshotFilesInDirectory());
         deleteAFileInAdvanceOfTheTest(filesToDelete);
-        int numberOfDeletedFiles = mavenMetadataWithSnapshotVersion.doDeleteFilesNotPartOfSnapshot(filesToDelete, Collections.emptyList());
+        var numberOfDeletedFiles = mavenMetadataWithSnapshotVersion.doDeleteFilesNotPartOfSnapshot(filesToDelete, Collections.emptyList());
         assertEquals(originalNumberOfFiles - numberOfFilesThatShouldNotBeDeleted - 1, numberOfDeletedFiles);
     }
 
 
     void deleteAFileInAdvanceOfTheTest(Set<File> filesToDelete) {
-        File fileToDeleteInAdvance = filesToDelete.iterator().next();
+        var fileToDeleteInAdvance = filesToDelete.iterator().next();
         fileToDeleteInAdvance.delete();
     }
 
