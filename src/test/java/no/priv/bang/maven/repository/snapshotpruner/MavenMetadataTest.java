@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.assertj.core.api.Condition;
 import org.jdom2.JDOMException;
 import org.junit.jupiter.api.Test;
@@ -91,7 +89,7 @@ class MavenMetadataTest {
             .stream()
             .map(File::getAbsolutePath)
             .filter(n -> n.contains("maven-metadata"))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private void assertHasSha1AndMd5Checksums(List<String> mavenMetadataFiles) {
