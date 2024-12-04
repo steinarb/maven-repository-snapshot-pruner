@@ -34,8 +34,7 @@ class MavenRepositorySnapshotPrunerTest {
     private Path setCurrentDirectoryToMockRepositoryTop() {
         var repositoryDirectory = Paths.get(maven.getProperty("repository.top"));
         System.setProperty("user.dir", repositoryDirectory.toString());
-        var currentDirectory = Paths.get(System.getProperty("user.dir"));
-        return currentDirectory;
+        return Paths.get(System.getProperty("user.dir"));
     }
 
 }
