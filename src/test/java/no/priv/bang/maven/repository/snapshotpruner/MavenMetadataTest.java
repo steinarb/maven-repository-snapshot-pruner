@@ -89,7 +89,7 @@ class MavenMetadataTest {
     private List<String> findMavenMetadataFiles(List<File> filesInDirectory) {
         return filesInDirectory
             .stream()
-            .map(f -> f.getAbsolutePath())
+            .map(File::getAbsolutePath)
             .filter(n -> n.contains("maven-metadata"))
             .collect(Collectors.toList());
     }
