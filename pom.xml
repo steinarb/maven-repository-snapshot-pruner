@@ -3,7 +3,7 @@
     <parent>
         <groupId>no.priv.bang.pom</groupId>
         <artifactId>bang-app-pom</artifactId>
-        <version>2.1.14</version>
+        <version>2.1.15</version>
     </parent>
     <groupId>no.priv.bang.maven.repository.snapshotpruner</groupId>
     <artifactId>maven-repository-snapshot-pruner</artifactId>
@@ -13,6 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <repository.source>${project.basedir}/src/test/resources/repository</repository.source>
         <repository.top>${project.build.testOutputDirectory}/repository</repository.top>
         <mainclass>no.priv.bang.maven.repository.snapshotpruner.MavenRepositorySnapshotPruner</mainclass>
