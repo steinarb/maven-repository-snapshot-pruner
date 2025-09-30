@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.jupiter.version>5.13.4</junit.jupiter.version>
+        <junit.jupiter.version>6.0.0</junit.jupiter.version>
         <repository.source>${project.basedir}/src/test/resources/repository</repository.source>
         <repository.top>${project.build.testOutputDirectory}/repository</repository.top>
         <mainclass>no.priv.bang.maven.repository.snapshotpruner.MavenRepositorySnapshotPruner</mainclass>
